@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
@@ -35,6 +36,11 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    /**
+     *
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -61,6 +67,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
+
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
             String[] forecastArray = {
@@ -74,6 +81,19 @@ public class MainActivity extends ActionBarActivity {
             };
 
             List<String> weekForecast = new ArrayList<String>(Arrays.asList(forecastArray));
+
+            /**
+             *
+             * @param context Текущий контекст
+             * @param resource ID ресурса layout-файла, содержащего макет для использования при создании экземпляров View
+             * @param textViewResourceId ID ресурса TextView, который должен быть заполнен, в ресурсе layout-файла
+             * @param objects Объекты для отображения в ListView
+             */
+            //TODO: Переделать комментарии
+            ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(getActivity(),
+                    R.layout.list_item_forecast,
+                    R.id.list_item_forecast_textview,
+                    weekForecast);
 
             return rootView;
         }
