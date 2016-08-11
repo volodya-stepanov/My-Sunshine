@@ -1,9 +1,10 @@
 package com.example.android.sunshine.app;
 
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,7 +17,12 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
-import java.util.AbstractList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -157,6 +163,64 @@ public class MainActivity extends ActionBarActivity {
 
             ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);   // TODO: Разобраться, в чём дело!
             listView.setAdapter(mForecastAdapter);
+
+            // Эти две строки должны быть объявлены за пределами try/catch
+            // чтобы они могли быть закрыты в блоке finally
+            HttpURLConnection urlConnection = null;
+            BufferedReader reader = null;
+
+            // Будет содержать необработанный JSON-ответ как строку
+            String forecastJsonStr = null;
+
+            try{
+                // Создаём URL для запроса OpenWeatherMap
+                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
+                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+                URL url = new URL(baseUrl.concat(apiKey));
+
+                // Создаём запрос к OpenWeatherMap и открываем соединение
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // Читаем входной поток в строку
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer buffer = new StringBuffer();
+                if (inputStream == null){
+                    // Нечего делать
+                    return null;
+                }
+                reader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    // Так как это JSON, добавление новой строки не обязательно (это не повлияет на парсинг)
+                    // Но это делает отладку *намного* проще, если вы распечатаете заполненный
+                    // буфер для отладки
+                    buffer.append(line + "\n");
+                }
+
+                if (buffer.length() == 0){
+                    // Хранилище было пустое. Нет смысла в парсинге
+                    return null;
+                }
+                forecastJsonStr = buffer.toString();
+            } catch (IOException e) {
+                Log.e("PlaceHolderFragment", "Error", e);
+                // Если код не получил успешно данные о погоде, нет смысла пытаться парсить его.
+                return null;
+            } finally {
+                if (urlConnection!=null){
+                    urlConnection.disconnect();
+                }
+                if (reader != null){
+                    try {
+                        reader.close();
+                    } catch (final IOException e) {
+                        Log.e("PlaceholderFragment", "Error closing stream, e");
+                    }
+                }
+            }
 
             return rootView;
         }
