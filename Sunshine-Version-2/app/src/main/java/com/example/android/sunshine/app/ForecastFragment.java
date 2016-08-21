@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -89,20 +90,24 @@ public class ForecastFragment extends Fragment {
         ListView listView = (ListView) rootView.findViewById(R.id.listview_forecast);   // TODO: Разобраться, в чём дело!
         listView.setAdapter(mForecastAdapter);
 
-        new FetchWeatherTask().execute();
+        new FetchWeatherTask().execute("94043");
 
         return rootView;
     }
 
+<<<<<<< Updated upstream
 
 
     public class FetchWeatherTask extends AsyncTask<Void, Void, Void>
+=======
+    public class FetchWeatherTask extends AsyncTask<String, Void, Void>
+>>>>>>> Stashed changes
     {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(String... postcodes) {
 
             // Эти две строки должны быть объявлены за пределами try/catch
             // чтобы они могли быть закрыты в блоке finally
@@ -114,9 +119,30 @@ public class ForecastFragment extends Fragment {
 
             try{
                 // Создаём URL для запроса OpenWeatherMap
-                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
-                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-                URL url = new URL(baseUrl.concat(apiKey));
+                String postcode = postcodes[0];
+
+                Uri.Builder builder = new Uri.Builder();
+                builder.scheme("http");
+                builder.authority("api.openweathermap.org");
+                builder.path("data");
+                builder.appendPath("2.5");
+                builder.appendPath("forecast");
+                builder.appendPath("daily");
+                builder.appendQueryParameter("q", postcode);
+                builder.appendQueryParameter("mode", "json");
+                builder.appendQueryParameter("units", "metric");
+                builder.appendQueryParameter("cnt", "7");
+                builder.appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+                Uri baseUri = builder.build();
+
+                URL url = new URL(baseUri.toString());
+
+//                String baseUrlFirstPart = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
+//                String baseUrlSecondPart = "&mode=json&units=metric&cnt=7";
+//
+//                String baseUrl = baseUrlFirstPart + postcode + baseUrlSecondPart;
+//                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
+//                URL url = new URL(baseUrl.concat(apiKey));
 
                 // Создаём запрос к OpenWeatherMap и открываем соединение
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -145,6 +171,9 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+
+                Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
+
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
                 // Если код не получил успешно данные о погоде, нет смысла пытаться парсить его.
