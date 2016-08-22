@@ -53,7 +53,7 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute();
+            new FetchWeatherTask().execute("94043");
             return true;
         }
 
@@ -91,23 +91,23 @@ public class ForecastFragment extends Fragment {
         listView.setAdapter(mForecastAdapter);
 
         new FetchWeatherTask().execute("94043");
+//        new FetchWeatherTask().execute();
 
         return rootView;
     }
 
-<<<<<<< Updated upstream
-
-
-    public class FetchWeatherTask extends AsyncTask<Void, Void, Void>
-=======
     public class FetchWeatherTask extends AsyncTask<String, Void, Void>
->>>>>>> Stashed changes
     {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(String... postcodes) {
+        protected Void doInBackground(String... params) {
+
+            // Если нет почтового индекса, нечего искать. Проверка размера массива параметров
+            if (params.length == 0) {
+                return null;
+            }
 
             // Эти две строки должны быть объявлены за пределами try/catch
             // чтобы они могли быть закрыты в блоке finally
@@ -117,30 +117,37 @@ public class ForecastFragment extends Fragment {
             // Будет содержать необработанный JSON-ответ как строку
             String forecastJsonStr = null;
 
+            String format = "json";
+            String units = "metric";
+            int numDays = 7;
+
             try{
                 // Создаём URL для запроса OpenWeatherMap
-                String postcode = postcodes[0];
+                final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+                final String QUERY_PARAM = "q";
+                final String FORMAT_PARAM = "mode";
+                final String UNITS_PARAM = "units";
+                final String DAYS_PARAM = "cnt";
 
-                Uri.Builder builder = new Uri.Builder();
-                builder.scheme("http");
-                builder.authority("api.openweathermap.org");
-                builder.path("data");
-                builder.appendPath("2.5");
-                builder.appendPath("forecast");
-                builder.appendPath("daily");
-                builder.appendQueryParameter("q", postcode);
-                builder.appendQueryParameter("mode", "json");
-                builder.appendQueryParameter("units", "metric");
-                builder.appendQueryParameter("cnt", "7");
-                builder.appendQueryParameter("APPID", BuildConfig.OPEN_WEATHER_MAP_API_KEY);
-                Uri baseUri = builder.build();
+                // TODO: Что такое buidUpon и parse?
+                // TODO: Забыла добавить APPKEY
+                Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
+                .appendQueryParameter(QUERY_PARAM, params[0])
+                .appendQueryParameter(FORMAT_PARAM, format)
+                .appendQueryParameter(UNITS_PARAM, units)
+                .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .build();
 
-                URL url = new URL(baseUri.toString());
+                // Создаём URL на основе URI
+                URL url = new URL(builtUri.toString());
 
+                Log.v(LOG_TAG, "Url built with builder: " + url);
 //                String baseUrlFirstPart = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
 //                String baseUrlSecondPart = "&mode=json&units=metric&cnt=7";
-//
 //                String baseUrl = baseUrlFirstPart + postcode + baseUrlSecondPart;
+
+//                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
+
 //                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
 //                URL url = new URL(baseUrl.concat(apiKey));
 
