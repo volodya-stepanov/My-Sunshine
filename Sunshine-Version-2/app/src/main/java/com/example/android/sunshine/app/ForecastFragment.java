@@ -15,6 +15,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -182,6 +185,8 @@ public class ForecastFragment extends Fragment {
 
                 Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
 
+                var maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
+
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
                 // Если код не получил успешно данные о погоде, нет смысла пытаться парсить его.
@@ -199,6 +204,13 @@ public class ForecastFragment extends Fragment {
                 }
             }
             return null;
+        }
+
+        private double getMaxTemperatureForDay(String forecastJsonStr, int dayIndex)
+        throws JSONException {
+            JSONObject jsonObject = new JSONObject(forecastJsonStr);
+
+            return -1;
         }
     }
 }
