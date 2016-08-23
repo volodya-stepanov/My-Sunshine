@@ -129,8 +129,9 @@ public class ForecastFragment extends Fragment {
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
 
-                // TODO: Что такое buidUpon и parse?
                 // TODO: Забыла добавить APPKEY
+                // Метод parse создаёт Uri, которое парсит данную закодированную Uri-строку
+                // Метод buildUpon создает новый builder, копируя атрибуты из этого Uri
                 Uri builtUri = Uri.parse(FORECAST_BASE_URL).buildUpon()
                 .appendQueryParameter(QUERY_PARAM, params[0])
                 .appendQueryParameter(FORMAT_PARAM, format)
