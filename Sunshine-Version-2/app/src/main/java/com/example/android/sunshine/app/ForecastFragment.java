@@ -146,14 +146,6 @@ public class ForecastFragment extends Fragment {
                 URL url = new URL(builtUri.toString());
 
                 Log.v(LOG_TAG, "Url built with builder: " + url);
-//                String baseUrlFirstPart = "http://api.openweathermap.org/data/2.5/forecast/daily?q=";
-//                String baseUrlSecondPart = "&mode=json&units=metric&cnt=7";
-//                String baseUrl = baseUrlFirstPart + postcode + baseUrlSecondPart;
-
-//                String baseUrl = "http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7";
-
-//                String apiKey = "&APPID=" + BuildConfig.OPEN_WEATHER_MAP_API_KEY;
-//                URL url = new URL(baseUrl.concat(apiKey));
 
                 // Создаём запрос к OpenWeatherMap и открываем соединение
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -185,7 +177,7 @@ public class ForecastFragment extends Fragment {
 
                 Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
 
-                var maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
+                double maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
