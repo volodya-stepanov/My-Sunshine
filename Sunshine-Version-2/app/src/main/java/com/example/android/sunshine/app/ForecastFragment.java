@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,13 +100,13 @@ public class ForecastFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchWeatherTask extends AsyncTask<String, Void, Void>
+    public class FetchWeatherTask extends AsyncTask<String, Void, String>
     {
 
         private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected String doInBackground(String... params) {
 
             // Если нет почтового индекса, нечего искать. Проверка размера массива параметров
             if (params.length == 0) {
@@ -131,6 +132,7 @@ public class ForecastFragment extends Fragment {
                 final String FORMAT_PARAM = "mode";
                 final String UNITS_PARAM = "units";
                 final String DAYS_PARAM = "cnt";
+                final String APPID_PARAM = "APPID";
 
                 // TODO: Забыла добавить APPKEY
                 // Метод parse создаёт Uri, которое парсит данную закодированную Uri-строку
@@ -140,6 +142,7 @@ public class ForecastFragment extends Fragment {
                 .appendQueryParameter(FORMAT_PARAM, format)
                 .appendQueryParameter(UNITS_PARAM, units)
                 .appendQueryParameter(DAYS_PARAM, Integer.toString(numDays))
+                .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_WEATHER_MAP_API_KEY)
                 .build();
 
                 // Создаём URL на основе URI
@@ -177,7 +180,7 @@ public class ForecastFragment extends Fragment {
 
                 Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
 
-                double maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
+                //double maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error", e);
@@ -195,14 +198,47 @@ public class ForecastFragment extends Fragment {
                     }
                 }
             }
-            return null;
+            //return null;
+            return forecastJsonStr;
         }
 
-        private double getMaxTemperatureForDay(String forecastJsonStr, int dayIndex)
-        throws JSONException {
-            JSONObject jsonObject = new JSONObject(forecastJsonStr);
+        @Override
+        protected void onPostExecute(String forecastJsonStr) {
+            super.onPostExecute(forecastJsonStr);
 
-            return -1;
+            //getMaxTemperatureForDay(forecastJsonStr, 0);
+            JSONObject dataJsonObj = null;
+            String maxTemp = "";
+
+            try {
+                getMaxTemperatureForDay(forecastJsonStr, 0);
+            } catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+
+        private double getMaxTemperatureForDay(String weatherJsonStr, int dayIndex)
+        throws JSONException {
+            // Создаём новый JSONObject
+            JSONObject jsonObject = new JSONObject(weatherJsonStr);
+
+            // Получаем массив JSONArray по имени. В данном случае нас интересует массив list
+            JSONArray list = jsonObject.getJSONArray("list");
+
+            // Получаем из массива информацию о необходимом дне по индексу
+            JSONObject day = list.getJSONObject(dayIndex);
+
+            // Из найденного объекта day получаем информацию о температуре - объект temp
+            JSONObject temp = day.getJSONObject("temp");
+
+            // Из найденного объекта temp получаем вещественное число, содержащее максимальную температуру //TODO: Неизвестно, откуда она берётся. Если просто выполнить запрос по строке, там совершенно другие температуры
+            double maxTemp = temp.getDouble("max");
+
+            // Выводим результат в лог
+            Log.d(LOG_TAG, "Максимальная температура: " + maxTemp);
+
+            // Возвращаем результат
+            return maxTemp;
         }
     }
 }
