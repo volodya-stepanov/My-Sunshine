@@ -200,9 +200,9 @@ public class ForecastFragment extends Fragment {
                 resultStrs[i] = day + " - " + description + " - " + highAndLow;
             }
 
-            for (String s : resultStrs) {
-                Log.v(LOG_TAG, "Forecast entry: " + s);
-            }
+//            for (String s : resultStrs) {
+//                Log.v(LOG_TAG, "Forecast entry: " + s);
+//            }
             return resultStrs;
 
         }
@@ -249,7 +249,7 @@ public class ForecastFragment extends Fragment {
                 // Создаём URL на основе URI
                 URL url = new URL(builtUri.toString());
 
-                Log.v(LOG_TAG, "Url built with builder: " + url);
+                // Log.v(LOG_TAG, "Url built with builder: " + url);
 
                 // Создаём запрос к OpenWeatherMap и открываем соединение
                 urlConnection = (HttpURLConnection) url.openConnection();
@@ -279,7 +279,7 @@ public class ForecastFragment extends Fragment {
                 }
                 forecastJsonStr = buffer.toString();
 
-                Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
+                // Log.v(LOG_TAG, "Forecast JSON string: " + forecastJsonStr);
 
                 //double maxTemperature = getMaxTemperatureForDay(forecastJsonStr, 0);
 
@@ -310,17 +310,29 @@ public class ForecastFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(String[] strings) {
-            super.onPostExecute(strings);
-            List<String> weekForecast = new ArrayList<String>(Arrays.asList(strings));
-            mForecastAdapter.clear();
+        protected void onPostExecute(String[] result) {
+//            super.onPostExecute(strings);
+//            List<String> weekForecast = new ArrayList<String>(Arrays.asList(strings));
+//            mForecastAdapter.clear();
+//            if (weekForecast != null){
+//                for (String string : weekForecast){
+//                    mForecastAdapter.add(string);
+//                }
+//            }
+//            mForecastAdapter.notifyDataSetChanged();
 
-            if (weekForecast != null){
-                for (String string : weekForecast){
-                    mForecastAdapter.add(string);
+            // TODO: Проверить эти два метода!
+            if (result != null){
+                mForecastAdapter.clear();
+                for (String dayForecastStr : result){
+                    mForecastAdapter.add(dayForecastStr);
                 }
             }
-            mForecastAdapter.notifyDataSetChanged();
+
+//            if (result != null){
+//                mForecastAdapter.clear();
+//                mForecastAdapter.addAll(result);
+//            }
         }
     }
 }
