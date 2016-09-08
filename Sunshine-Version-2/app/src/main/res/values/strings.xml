@@ -8,19 +8,34 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="title_activity_settings">Settings</string>
 
-    <!--Label for location preference {CHAR LIMIT=30}-->
-    <string name="pref_location_label">Location</string>
-    <string name="pref_metrics_label">Temperature Units</string>
-
-    <!--Key name for storing location in SharedPreferences {CHAR LIMIT=NONE}-->
-    <string name="pref_location_key" translatable="false">location</string>
-    <string name="pref_metrics_key" translatable="false">metrics</string>
-
-    <!--Default postal code for location preference {CHAR LIMIT=NONE}-->
-    <string name="pref_location_default" translatable="false">94043</string>
-    <string name="pref_metrics_default" translatable="false">1</string>
-
     <!-- Strings related to Settings -->
+    <!--Название настройки местоположения {CHAR LIMIT=30}-->
+    <string name="pref_location_label">Location</string>
+
+    <!--Название ключа для хранения местоположения в объекте SharedPreferences {CHAR LIMIT=NONE}-->
+    <string name="pref_location_key" translatable="false">location</string>
+
+    <!--Почтовый индекс по умолчанию для настройки местоположения {CHAR LIMIT=NONE}-->
+    <string name="pref_location_default" translatable="false">305000</string>
+
+
+    <!--Название настройки единиц измерения-->
+    <string name="pref_units_label">Temperature Units</string>
+
+    <!--Название настройки температуры в градусах Цельсия-->
+    <string name="pref_units_label_metric">Metric</string>
+
+    <!--Название настройки температуры в градусах Фаренгейта-->
+    <string name="pref_units_label_imperial">Imperial</string>
+
+    <!--Название ключа настройки единиц измерения-->
+    <string name="pref_units_key" translatable="false">units</string>
+
+    <!--Значение в объекте SharedPreferences настройки температуры в градусах Цельсия-->
+    <string name="pref_units_metric" translatable="false">metric</string>
+
+    <!--Значение в объекте SharedPreferences настройки температуры в градусах Фаренгейта-->
+    <string name="pref_units_imperial" translatable="false">imperial</string>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>
@@ -44,6 +59,8 @@
         <item>0</item>
         <item>-1</item>
     </string-array>
+
+
 
     <!-- Example settings for Data & Sync -->
     <string name="pref_header_data_sync">Data &amp; sync</string>
