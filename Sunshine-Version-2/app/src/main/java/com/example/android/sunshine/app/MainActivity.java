@@ -37,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
-
+        Log.d(LOG_TAG, "onCreate");
     }
 
     @Override
@@ -115,6 +115,7 @@ public class MainActivity extends ActionBarActivity {
                 Uri.parse("android-app://com.example.android.sunshine.app/http/host/path")
         );
         AppIndex.AppIndexApi.start(client, viewAction);
+        Log.d(LOG_TAG, "onStart");
     }
 
     @Override
@@ -135,5 +136,24 @@ public class MainActivity extends ActionBarActivity {
         );
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
+        Log.d(LOG_TAG, "onStop");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TAG, "onPause");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TAG, "onResume");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TAG, "onDestroy");
     }
 }
