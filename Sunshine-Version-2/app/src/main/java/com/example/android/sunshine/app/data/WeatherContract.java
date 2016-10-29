@@ -42,7 +42,7 @@ public class WeatherContract {
         public static final String TABLE_NAME = "location";
 
         // Строка с настройкой местоположения - это то, что будет передано в openweathermap как запрос местоположения
-        public static final String COLUMN_LOCATION_SETTINGS = "location_settings";
+        public static final String COLUMN_LOCATION_SETTING = "location_setting";
 
         // Читаемая строка местоположения, предоставляемая API
         public static final String COLUMN_CITY_NAME = "city_name";
