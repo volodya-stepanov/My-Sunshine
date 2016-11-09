@@ -115,16 +115,23 @@ public class WeatherProvider extends ContentProvider {
         testUriMatcher test within TestUriMatcher.
      */
     static UriMatcher buildUriMatcher() {
-        // 1) The code passed into the constructor represents the code to return for the root
-        // URI.  It's common to use NO_MATCH as the code for this case. Add the constructor below.
+        // 1) Код, переданный в конструктор, представляет собой возвращаемый код для корневого
+        // URI.  В этом случае принято использовать в качестве кода NO_MATCH.
+        final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
 
+        // Строка с авторитетным источником будет многократно использоваться далее, поэтому вынесем
+        // её в отдельную переменную
+        final String authority = WeatherContract.CONTENT_AUTHORITY;
 
-        // 2) Use the addURI function to match each of the types.  Use the constants from
-        // WeatherContract to help define the types to the UriMatcher.
+        // 2) Используем функцию addURI, чтобы сопоставить типы. В качестве третьего параметра
+        // используем константы из WeatherContract, чтобы помочь UriMatcherу определить типы.
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER, WEATHER);
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*", WEATHER_WITH_LOCATION);
+        matcher.addURI(authority, WeatherContract.PATH_WEATHER + "/*/#", WEATHER_WITH_LOCATION_AND_DATE);
+        matcher.addURI(authority, WeatherContract.PATH_LOCATION, LOCATION);
 
-
-        // 3) Return the new matcher!
-        return null;
+        // 3) Возвращаем новый matcher!
+        return matcher;
     }
 
     /*
@@ -150,8 +157,9 @@ public class WeatherProvider extends ContentProvider {
 
         switch (match) {
             // Student: Uncomment and fill out these two cases
-//            case WEATHER_WITH_LOCATION_AND_DATE:
-//            case WEATHER_WITH_LOCATION:
+            case WEATHER_WITH_LOCATION_AND_DATE:
+                return WeatherContract.WeatherEntry.CONTENT_ITEM_TYPE;
+            case WEATHER_WITH_LOCATION:
             case WEATHER:
                 return WeatherContract.WeatherEntry.CONTENT_TYPE;
             case LOCATION:
@@ -164,8 +172,8 @@ public class WeatherProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
-        // Here's the switch statement that, given a URI, will determine what kind of request it is,
-        // and query the database accordingly.
+        // Здесь мы имеем выражение switch, которое, получив URI, будет определять, какой это тип
+        // запроса, и делать соответствующий запрос к базе данных.
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
             // "weather/*/*"
