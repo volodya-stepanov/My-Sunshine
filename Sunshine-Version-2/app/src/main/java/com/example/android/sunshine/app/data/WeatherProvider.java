@@ -40,7 +40,7 @@ public class WeatherProvider extends ContentProvider {
     static{
         sWeatherByLocationSettingQueryBuilder = new SQLiteQueryBuilder();
         
-        //This is an inner join which looks like
+        //Это внутреннее соединение, которое выглядит так:
         //weather INNER JOIN location ON weather.location_id = location._id
         sWeatherByLocationSettingQueryBuilder.setTables(
                 WeatherContract.WeatherEntry.TABLE_NAME + " INNER JOIN " +
@@ -102,6 +102,28 @@ public class WeatherProvider extends ContentProvider {
                 projection,
                 sLocationSettingAndDaySelection,
                 new String[]{locationSetting, Long.toString(date)},
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getWeather(String[] projection, String sortOrder) {
+        return mOpenHelper.getReadableDatabase().query(WeatherContract.WeatherEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                sortOrder
+        );
+    }
+
+    private Cursor getLocation(String[] projection, String sortOrder) {
+        return mOpenHelper.getReadableDatabase().query(WeatherContract.LocationEntry.TABLE_NAME,
+                projection,
+                null,
+                null,
                 null,
                 null,
                 sortOrder
@@ -189,12 +211,12 @@ public class WeatherProvider extends ContentProvider {
             }
             // "weather"
             case WEATHER: {
-                retCursor = null;
+                retCursor = getWeather(projection, sortOrder);
                 break;
             }
             // "location"
             case LOCATION: {
-                retCursor = null;
+                retCursor = getLocation(projection, sortOrder);
                 break;
             }
 
