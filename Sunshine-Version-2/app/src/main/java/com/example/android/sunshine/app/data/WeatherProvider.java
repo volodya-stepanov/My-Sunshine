@@ -246,6 +246,15 @@ public class WeatherProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
+            case LOCATION:{
+                normalizeDate(values);
+                long _id = db.insert(WeatherContract.LocationEntry.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = WeatherContract.LocationEntry.buildLocationUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -255,18 +264,34 @@ public class WeatherProvider extends ContentProvider {
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        // Student: Start by getting a writable database
+        // Получаем базу данных для записи
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
 
-        // Student: Use the uriMatcher to match the WEATHER and LOCATION URI's we are going to
-        // handle.  If it doesn't match these, throw an UnsupportedOperationException.
+        // Используем uriMatcher, чтобы сопоставить URI WEATHER и LOCATION, которые мы
+        // собираемся обрабатывать. //TODO: Если нет соответствия, выбрасываем UnsupportedOperationException.
+        final int match = sUriMatcher.match(uri);
+        int rowsDeleted = 0;
 
-        // Student: A null value deletes all rows.  In my implementation of this, I only notified
-        // the uri listeners (using the content resolver) if the rowsDeleted != 0 or the selection
-        // is null.
-        // Oh, and you should notify the listeners here.
+        // Значение null удаляет все строки. В моей реализации этого, я только оповещал
+        // uri-слушателей (с помощью контент-резолвера) если rowsDeleted != 0 или выделение
+        // имеет значение null.
+        // О, и вы должны оповестить слушателей здесь.
+        switch (match) {
+            case WEATHER: {
+                rowsDeleted = db.delete(WeatherContract.WeatherEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+            case LOCATION: {
+                rowsDeleted = db.delete(WeatherContract.LocationEntry.TABLE_NAME, selection, selectionArgs);
+                break;
+            }
+        }
 
-        // Student: return the actual rows deleted
-        return 0;
+        if (rowsDeleted != 0 || selection == null)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        // Возвращаем удалённые строки
+        return rowsDeleted;
     }
 
     private void normalizeDate(ContentValues values) {
