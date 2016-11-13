@@ -305,9 +305,36 @@ public class WeatherProvider extends ContentProvider {
     @Override
     public int update(
             Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        // Student: This is a lot like the delete function.  We return the number of rows impacted
-        // by the update.
-        return 0;
+        // Этот метод во многом похож на метод delete. Мы возвращаем число строк, затрагиваемых
+        // обновлением.
+        // Получаем базу данных для записи
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+
+        // Используем uriMatcher, чтобы сопоставить URI WEATHER и LOCATION, которые мы
+        // собираемся обрабатывать. //TODO: Если нет соответствия, выбрасываем UnsupportedOperationException.
+        final int match = sUriMatcher.match(uri);
+        int rowsUpdated = 0;
+
+        // Значение null обновляет все строки. В моей реализации этого, я только оповещал
+        // uri-слушателей (с помощью контент-резолвера) если rowsUpdated != 0 или выделение
+        // имеет значение null.
+        // О, и вы должны оповестить слушателей здесь.
+        switch (match) {
+            case WEATHER: {
+                rowsUpdated = db.update(WeatherContract.WeatherEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            }
+            case LOCATION: {
+                rowsUpdated = db.update(WeatherContract.LocationEntry.TABLE_NAME, values, selection, selectionArgs);
+                break;
+            }
+        }
+
+        if (rowsUpdated != 0 || selection == null)
+            getContext().getContentResolver().notifyChange(uri, null);
+
+        // Возвращаем обновлённые строки
+        return rowsUpdated;
     }
 
     @Override
