@@ -272,6 +272,9 @@ public class WeatherProvider extends ContentProvider {
         final int match = sUriMatcher.match(uri);
         int rowsDeleted = 0;
 
+        // Это заставляет при удалении всех строк возвращать число удаленных строк
+        if (null == selection) selection = "1";
+
         // Значение null удаляет все строки. В моей реализации этого, я только оповещал
         // uri-слушателей (с помощью контент-резолвера) если rowsDeleted != 0 или выделение
         // имеет значение null.
@@ -287,7 +290,7 @@ public class WeatherProvider extends ContentProvider {
             }
         }
 
-        if (rowsDeleted != 0 || selection == null)
+        if (rowsDeleted != 0)
             getContext().getContentResolver().notifyChange(uri, null);
 
         // Возвращаем удалённые строки
@@ -328,9 +331,11 @@ public class WeatherProvider extends ContentProvider {
                 rowsUpdated = db.update(WeatherContract.LocationEntry.TABLE_NAME, values, selection, selectionArgs);
                 break;
             }
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        if (rowsUpdated != 0 || selection == null)
+        if (rowsUpdated != 0)
             getContext().getContentResolver().notifyChange(uri, null);
 
         // Возвращаем обновлённые строки
