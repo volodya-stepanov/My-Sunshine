@@ -19,6 +19,7 @@ package com.example.android.sunshine.app;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
@@ -109,7 +110,7 @@ public class DetailActivity extends ActionBarActivity {
         private static final int COL_WEATHER_MIN_TEMP = 4;
 
         private static final String FORECAST_SHARE_HASHTAG = " #SunshineApp";
-        private String mForecastStr;
+        //private String mForecastStr;
 
         public DetailFragment() {
             setHasOptionsMenu(true);
@@ -119,18 +120,19 @@ public class DetailActivity extends ActionBarActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
 
-            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            final TextView forecastTextView = (TextView) rootView.findViewById(R.id.detail_text);
-
-            Intent intent = getActivity().getIntent();
-            if(intent != null){
-                mForecastStr = intent.getDataString();
-            }
-            String forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
-
-            forecastTextView.setText(mForecastStr);
-
-            return rootView;
+//            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+//            final TextView forecastTextView = (TextView) rootView.findViewById(R.id.detail_text);
+//
+//            Intent intent = getActivity().getIntent();
+//            if(intent != null){
+//                mForecastStr = intent.getDataString();
+//            }
+//            String forecast = intent.getStringExtra(Intent.EXTRA_TEXT);
+//
+//            forecastTextView.setText(mForecastStr);
+//
+//            return rootView;
+            return inflater.inflate(R.layout.fragment_detail, container, false);
         }
 
         @Override
@@ -144,10 +146,14 @@ public class DetailActivity extends ActionBarActivity {
             // Fetch and store ShareActionProvider
             mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
-            if(mShareActionProvider != null) {
+//            if(mShareActionProvider != null) {
+//                mShareActionProvider.setShareIntent(createShareForecastIntent());
+//            } else {
+//                Log.d(LOG_TAG, "Share Action Provider is null?");
+//            }
+
+            if(mForecast != null) {
                 mShareActionProvider.setShareIntent(createShareForecastIntent());
-            } else {
-                Log.d(LOG_TAG, "Share Action Provider is null?");
             }
         }
 
@@ -156,8 +162,14 @@ public class DetailActivity extends ActionBarActivity {
             shareIntent.setAction(Intent.ACTION_SEND);
             shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
             shareIntent.setType("text/plain");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecastStr + FORECAST_SHARE_HASHTAG);
+            shareIntent.putExtra(Intent.EXTRA_TEXT, mForecast + FORECAST_SHARE_HASHTAG);
             return shareIntent;
+        }
+
+        @Override
+        public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+            getLoaderManager().initLoader(DETAIL_LOADER, null, this);
+            super.onActivityCreated(savedInstanceState);
         }
 
         @Override
