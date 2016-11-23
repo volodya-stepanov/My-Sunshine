@@ -120,7 +120,7 @@ public class DetailActivity extends ActionBarActivity {
                                  Bundle savedInstanceState) {
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            final TextView forecastTextView = (TextView) rootView.findViewById(R.id.forecastTextView);
+            final TextView forecastTextView = (TextView) rootView.findViewById(R.id.detail_text);
 
             Intent intent = getActivity().getIntent();
             if(intent != null){
@@ -142,7 +142,7 @@ public class DetailActivity extends ActionBarActivity {
             MenuItem item = menu.findItem(R.id.action_share);
 
             // Fetch and store ShareActionProvider
-            ShareActionProvider mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+            mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
 
             if(mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(createShareForecastIntent());
@@ -196,7 +196,7 @@ public class DetailActivity extends ActionBarActivity {
 
             String low = Utility.formatTemperature(data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
 
-            mForecast = String.format("%s - %s - %s/%s", dateString, weatherDescription, high, );
+            mForecast = String.format("%s - %s - %s/%s", dateString, weatherDescription, high, low);
 
             TextView detailTextView = (TextView)getView().findViewById(R.id.detail_text);
             detailTextView.setText(mForecast);
@@ -205,9 +205,8 @@ public class DetailActivity extends ActionBarActivity {
             if (mShareActionProvider != null) {
                 mShareActionProvider.setShareIntent(createShareForecastIntent());
             }
-            }
-
         }
+
 
         @Override
         public void onLoaderReset(Loader<Cursor> loader) {
@@ -216,7 +215,7 @@ public class DetailActivity extends ActionBarActivity {
     }
 }
 
-0:56
+
 
 
 
