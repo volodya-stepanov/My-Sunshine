@@ -6,11 +6,6 @@ import android.support.v4.widget.CursorAdapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
-import static com.example.android.sunshine.app.ForecastFragment.COL_WEATHER_DATE;
-import static com.example.android.sunshine.app.ForecastFragment.COL_WEATHER_DESC;
-import static com.example.android.sunshine.app.ForecastFragment.COL_WEATHER_MIN_TEMP;
 
 /**
  * {@link ForecastAdapter} exposes a list of weather forecasts
@@ -75,7 +70,7 @@ public class ForecastAdapter extends CursorAdapter {
         // Наш view здесь довольно прост - просто text view
         // Мы сохраним функционал пользовательского интерфейса с простой (и медленной!) привязкой.
 
-        TextView tv = (TextView)view;
-        tv.setText(convertCursorRowToUXFormat(cursor));
+//        TextView tv = (TextView)view;
+//        tv.setText(convertCursorRowToUXFormat(cursor));
     }
 }

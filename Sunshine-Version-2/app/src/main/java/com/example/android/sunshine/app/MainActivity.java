@@ -23,6 +23,10 @@ public class MainActivity extends ActionBarActivity {
      */
     private GoogleApiClient client;
     private final String LOG_TAG = MainActivity.class.getSimpleName();
+    private final String FORECASTFRAGMENT_TAG = "FFTAG";
+
+    private String mLocation;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +34,14 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment())
+                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
                     .commit();
         }
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+        mLocation = Utility.getPreferredLocation(this);
 
         Log.d(LOG_TAG, "onCreate");
     }
@@ -148,6 +154,16 @@ public class MainActivity extends ActionBarActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        String location = Utility.getPreferredLocation(this);
+        if (location != null && !location.equals(mLocation)){
+            ForecastFragment ff = (ForecastFragment)getSupportFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if (null != ff) {
+                ff.onLocationChanged();
+            }
+            mLocation = Utility.getPreferredLocation(this);
+        }
+
+
         Log.d(LOG_TAG, "onResume");
     }
 
