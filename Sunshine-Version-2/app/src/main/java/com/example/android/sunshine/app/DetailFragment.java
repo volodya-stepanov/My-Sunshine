@@ -173,7 +173,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
 
             // Используем изображение-заглушку
-            mIconView.setImageResource(R.drawable.ic_launcher);
+            mIconView.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
 
             // Считываем дату из курсора и обновляем представления для дня недели и даты
             long date = data.getLong(COL_WEATHER_DATE);
