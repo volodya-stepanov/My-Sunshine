@@ -2,5 +2,6 @@
 <resources>
     <style name="listview_style">
         <item name="android:choiceMode">singleChoice</item>
+        <item name="android:layout_margin">0dp</item>
     </style>
 </resources>

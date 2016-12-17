@@ -206,7 +206,7 @@ public class DetailFragment extends Fragment implements LoaderManager.LoaderCall
             // Считываем дату из курсора и обновляем представления для дня недели и даты
             long date = data.getLong(COL_WEATHER_DATE);
             String friendlyDayText = Utility.getDayName(getActivity(), date);
-            String dateText = Utility.getDayName(getActivity(), date);
+            String dateText = Utility.getFormattedMonthDay(getActivity(), date);
             mFriendlyDateView.setText(friendlyDayText);
             mDateView.setText(dateText);
 

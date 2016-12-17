@@ -26,7 +26,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
 
     private ForecastAdapter mForecastAdapter;
 
-    //private boolean mUseTodayLayout;
+    private boolean mUseTodayLayout;
 
     // Уникальный ID для загрузчика
     private static final int FORECAST_LOADER = 0;
@@ -118,11 +118,11 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
         super.onSaveInstanceState(savedInstanceState);
     }
 
-//    public void setUseTodayLayout(boolean useTodayLayout) {
-//        mUseTodayLayout = useTodayLayout;
-//        if  (mForecastAdapter != null)
-//            mForecastAdapter.setUseTodayLayout(useTodayLayout);
-//    }
+    public void setUseTodayLayout(boolean useTodayLayout) {
+        mUseTodayLayout = useTodayLayout;
+        if  (mForecastAdapter != null)
+            mForecastAdapter.setUseTodayLayout(useTodayLayout);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -182,7 +182,7 @@ public class ForecastFragment extends Fragment implements LoaderManager.LoaderCa
             //mListView.setSelection(mSelectedItemPosition);
         }
 
-        //mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         return rootView;
     }
