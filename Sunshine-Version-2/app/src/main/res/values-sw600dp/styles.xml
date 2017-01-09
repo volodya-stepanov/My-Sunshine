@@ -3,5 +3,6 @@
     <style name="listview_style">
         <item name="android:choiceMode">singleChoice</item>
         <item name="android:layout_margin">0dp</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 </resources>

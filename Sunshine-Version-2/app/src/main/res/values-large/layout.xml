@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <item name="fragment_detail" type="layout">@layout/fragment_detail_wide</item>
+    <!--<item name="list_item_forecast" type="layout">@layout/list_item_forecast_wide</item>-->
     <!--<item name="fragment_detail" type="layout">@layout/fragment_detail</item>-->
 </resources>

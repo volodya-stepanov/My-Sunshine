@@ -51,6 +51,7 @@
             android:permission="com.example.android.sunshine.app.LICENSE">
 
         </provider>
+        <service android:name=".service.SunshineService"/>
     </application>
 
     <permission android:name="com.example.android.sunshine.app.LICENSE"
