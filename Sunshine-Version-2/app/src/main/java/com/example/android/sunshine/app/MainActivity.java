@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.android.sunshine.app.sync.SunshineSyncAdapter;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -57,6 +58,8 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
                 .findFragmentById(R.id.fragment_forecast);
 
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
 
 //        if (savedInstanceState == null) {
 //            getSupportFragmentManager().beginTransaction()
@@ -223,4 +226,5 @@ public class MainActivity extends ActionBarActivity implements ForecastFragment.
             startActivity(intent);
         }
     }
+
 }
